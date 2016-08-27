@@ -31,8 +31,7 @@ RUN apt-get install -yq --no-install-recommends \
         make \
         python \
         adduser \
-				git
-
+	git
 
 # Download node source package and install
 RUN git clone --recursive git://github.com/nodejs/node.git
