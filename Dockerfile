@@ -25,6 +25,15 @@ ENV APP_PORT 3000
 RUN apt-get update -yq \
 	&& apt-get upgrade -yq
 
+RUN apt-get install -yq --no-install-recommends \
+        gcc \
+        g++ \
+        make \
+        python \
+        adduser \
+				git
+
+
 # Download node source package and install
 RUN git clone --recursive git://github.com/nodejs/node.git
 WORKDIR /node
