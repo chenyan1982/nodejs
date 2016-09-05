@@ -6,17 +6,18 @@
 ###############################################################################
 #                                   Header                                    #
 ###############################################################################
-FROM ubuntu-upstart
+FROM sigsciserverimg/ubuntu_14.04-nodejs_5.9.1
 MAINTAINER Calvin.Chen
 
 ###############################################################################
 #                            Environment Variables                            #
 ###############################################################################
-# app directory
-ENV APP_DIR /app
 
-# service port
-ENV APP_PORT 3000
+# new user
+ENV DOCKER_USER=inlay
+
+# Password for the root
+ENV ROOT_USER_PASSWORD=root
 
 ###############################################################################
 #                                Instructions                                 #
@@ -30,19 +31,19 @@ RUN apt-get install -yq --no-install-recommends \
         g++ \
         make \
         python \
-        adduser \
-	git
-
-# Download node source package and install
-RUN git clone --recursive git://github.com/nodejs/node.git
-WORKDIR /node
-RUN ./configure
-RUN make
-RUN make install
-
-WORKDIR /${APP_DIR}
-
-EXPOSE ${APP_PORT}
+        adduser
 
 
-ENTRYPOINT ["/bin/bash"]
+# Set the root password
+RUN echo "root:${ROOT_USER_PASSWORD}" | chpasswd
+
+# Create new user
+RUN useradd --user-group --create-home --shell /bin/false ${DOCKER_USER}
+
+# Set the user id
+USER ${DOCKER_USER}
+
+WORKDIR /home/${DOCKER_USER}
+
+
+CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
