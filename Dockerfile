@@ -6,7 +6,7 @@
 ###############################################################################
 #                                   Header                                    #
 ###############################################################################
-FROM readytalk/nodejs
+FROM node:latest
 MAINTAINER Calvin.Chen
 
 ###############################################################################
@@ -22,7 +22,4 @@ ENV ROOT_USER_PASSWORD=root
 # Set the root password
 RUN echo "root:${ROOT_USER_PASSWORD}" | chpasswd
 
-WORKDIR /app
-
-CMD []
-ENTRYPOINT ["/nodejs/bin/npm", "start"]
+CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
