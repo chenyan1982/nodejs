@@ -1,0 +1,53 @@
+###############################################################################
+#                           Header Documentation                              #
+###############################################################################
+
+
+###############################################################################
+#                                   Header                                    #
+###############################################################################
+FROM ubuntu-upstart
+MAINTAINER Calvin.Chen
+
+###############################################################################
+#                            Environment Variables                            #
+###############################################################################
+
+# Password for the root
+ENV ROOT_USER_PASSWORD=root
+
+###############################################################################
+#                                Instructions                                 #
+###############################################################################
+# Install dependencies
+RUN apt-get update -yq \
+	&& apt-get upgrade -yq
+
+RUN apt-get install -yq --no-install-recommends \
+        gcc \
+        g++ \
+        make \
+        python \
+				git \
+				wget
+
+# Download node source package and install
+RUN wget https://nodejs.org/download/release/v6.2.2/node-v6.2.2.tar.gz
+
+RUN tar zxvf node-v6.2.2.tar.gz \
+	&& rm -f node-v6.2.2.tar.gz
+
+WORKDIR node-v6.2.2/
+
+RUN ./configure \
+	&& make install
+
+
+# Set the root password
+RUN echo "root:${ROOT_USER_PASSWORD}" | chpasswd
+
+CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+
+###############################################################################
+#                                    End                                      #
+###############################################################################
