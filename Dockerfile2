@@ -16,6 +16,10 @@ MAINTAINER Calvin.Chen
 # Password for the root
 ENV ROOT_USER_PASSWORD=root
 
+ENV SUDO_USER=root
+
+ENV APP_PORT=3000
+
 ###############################################################################
 #                                Instructions                                 #
 ###############################################################################
@@ -45,6 +49,8 @@ RUN ./configure \
 
 # Set the root password
 RUN echo "root:${ROOT_USER_PASSWORD}" | chpasswd
+
+EXPOSE ${APP_PORT}
 
 CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
 
